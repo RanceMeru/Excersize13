@@ -1,83 +1,50 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
-class TaskTrackerDecon
+namespace TaskList
 {
-    static void Main()
-    {//This application keeps prompting the user for tasks to add to the task list until the user says they are done. 
-//Then it displays the task list with each task marked as either "completed" or "not completed". 
-//The user can then enter the numbers of the tasks they completed that day, and the application will update the task list accordingly.
-        List<string> tasks = new List<string>();
-
-        while (true)
-        {
-            Console.WriteLine("Enter a task to add to your task list: ");
-            string task = Console.ReadLine();
-
-            tasks.Add(task);
-
-            Console.WriteLine("Task added!");
-
-            Console.WriteLine("Would you like to add another task? (y/n)");
-            string answer = Console.ReadLine();
-
-            if (answer.ToLower() == "n")
-            {
-                break;
-            }
-        }
-
-        Console.Clear();
-
-        Console.WriteLine("Your task list:");
-
-        for (int i = 0; i < tasks.Count; i++)
-        {
-            Console.Write((i + 1) + ". " + tasks[i]);
-
-            if (IsTaskComplete(tasks[i]))
-            {
-                Console.WriteLine(" (completed)");
-            }
-            else
-            {
-                Console.WriteLine(" (not completed)");
-            }
-        }
-
-        Console.WriteLine("Enter the numbers of the tasks you completed today (comma-separated):");
-        string[] completedTasksInput = Console.ReadLine().Split(',');
-        List<int> completedTasks = new List<int>();
-        
-        foreach (string taskIdx in completedTasksInput)
-        {
-            if (int.TryParse(taskIdx.Trim(), out int taskIndex))
-            {
-                completedTasks.Add(taskIndex);
-            }
-        }
-
-        foreach (int idx in completedTasks)
-        {
-            tasks[idx - 1] += " (completed)";
-        }
-
-        Console.Clear();
-
-        Console.WriteLine("Your task list:");
-
-        for (int i = 0; i < tasks.Count; i++)
-        {
-            Console.WriteLine((i + 1) + ". " + tasks[i]);
-        }
-    }
-
-    private static bool IsTaskComplete(string task)
+    class Program
     {
-        return task.EndsWith("(completed)");
+        static void Main(string[] args)
+        {
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+            Console.WriteLine("Welcome to the Task List program!");
+            Console.WriteLine("Enter 'exit' to quit the program.");
+            Console.WriteLine();
+
+            List<string> taskList = new List<string>();
+
+            while (true)
+            {
+                Console.Write("Enter a task: ");
+                string input = Console.ReadLine().Trim();
+
+                if (input.ToLower() == "exit")
+                {
+                    break;
+                }
+
+                taskList.Add(input);
+                Console.WriteLine("Task added to the list!");
+                Console.WriteLine();
+            }
+
+            string filePath = Path.Combine(desktopPath, "TaskList.txt");
+
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                foreach (string task in taskList)
+                {
+                    writer.WriteLine(task);
+                }
+            }
+
+            Console.WriteLine("Task List saved to file!");
+            Console.WriteLine($"Location: {filePath}");
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
+        }
     }
 }
-
-//This application keeps prompting the user for tasks to add to the task list until the user says they are done. 
-//Then it displays the task list with each task marked as either "completed" or "not completed". 
-//The user can then enter the numbers of the tasks they completed that day, and the application will update the task list accordingly.
