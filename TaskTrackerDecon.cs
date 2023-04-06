@@ -31,18 +31,19 @@ namespace TaskList
                 Console.WriteLine();
             }
 
-            string filePath = Path.Combine(desktopPath, "TaskList.txt");
+           string filePath = Path.Combine(desktopPath, "TaskList.txt");
 
-            using (StreamWriter writer = new StreamWriter(filePath))
+           using (StreamWriter writer = new StreamWriter(filePath, true))//the true boolean in the parentheses makes the file update and not overite
+        {
+            foreach (string task in taskList)
             {
-                foreach (string task in taskList)
-                {
-                    writer.WriteLine(task);
-                }
+             writer.WriteLine(task);
             }
+        }
 
             Console.WriteLine("Task List saved to file!");
             Console.WriteLine($"Location: {filePath}");
+
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
